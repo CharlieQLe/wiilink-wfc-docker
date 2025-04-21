@@ -10,8 +10,6 @@ services:
             POSTGRES_USER: wiilink
             POSTGRES_DB: wwfc
             POSTGRES_PASSWORD: password
-        env_file:
-            - .env
         healthcheck:
             test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
             start_period: 20s
