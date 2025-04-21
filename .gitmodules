@@ -1,0 +1,6 @@
+[submodule "wfc-server"]
+	path = wfc-server
+	url = https://github.com/WiiLink24/wfc-server.git
+[submodule "wfc-patcher-wii"]
+	path = wfc-patcher-wii
+	url = https://github.com/WiiLink24/wfc-patcher-wii

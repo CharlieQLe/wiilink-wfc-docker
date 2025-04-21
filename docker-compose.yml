@@ -1,0 +1,52 @@
+services:
+    db:
+        image: postgres:16-alpine
+        networks:
+            - wfc
+        volumes:
+            - ./wfc-server/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+            - db:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: wiilink
+            POSTGRES_DB: wwfc
+            POSTGRES_PASSWORD: password
+        env_file:
+            - .env
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+            start_period: 20s
+            interval: 10s
+            retries: 5
+            timeout: 5s
+            start_interval: 10s
+    wfc:
+        build: 
+            context: .
+            dockerfile: Dockerfile
+            args:
+                WFC_DOMAIN:
+        networks:
+            - wfc
+        ports:
+            - 80:80
+            - 29900:29900
+            - 29901:29901
+            - 27901:27901
+            - 27901:27901/udp
+            - 29920:29920
+            - 28910:28910
+            - 27900:27900
+            - 27900:27900/udp
+            - 29998:29998
+            - 29999:29999
+        volumes:
+            - ./config.xml:/app/config.xml
+        depends_on:
+            db:
+                condition: service_healthy
+                restart: true
+volumes:
+    db:
+        driver: local
+networks:
+    wfc:
